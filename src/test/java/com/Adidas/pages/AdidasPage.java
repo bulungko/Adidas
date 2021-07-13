@@ -1,6 +1,10 @@
 package com.Adidas.pages;
 
+import com.Adidas.utilities.BrowserUtils;
 import com.Adidas.utilities.Driver;
+import com.github.javafaker.Faker;
+import org.junit.Assert;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,6 +13,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class AdidasPage {
+    AdidasPage adidas;
     public AdidasPage() {
         PageFactory.initElements(Driver.getDriver(), this);
     }
@@ -67,5 +72,53 @@ public class AdidasPage {
 
 @FindBy(xpath = "//p[@class='lead text-muted ']")
     public WebElement confirmation;
+
+
+public void addSony() {
+    adidas = new AdidasPage();
+    adidas.laptops.click();
+    BrowserUtils.sleep(1);
+    adidas.sony.click();
+    BrowserUtils.sleep(1);
+    adidas.addToCartSony.click();
+    BrowserUtils.sleep(1);
+}
+
+public void  acceptAlert(){
+    Alert alert = Driver.getDriver().switchTo().alert();
+    alert.accept();
+    BrowserUtils.sleep(1);
+    }
+
+    public void addDell() {
+        adidas.home.click();
+        BrowserUtils.sleep(1);
+        adidas.laptops.click();
+        BrowserUtils.sleep(1);
+        adidas.dell.click();
+        BrowserUtils.sleep(1);
+        adidas.addToCartSony.click();
+        BrowserUtils.sleep(2);
+    }
+
+    public void fillWithJavaFaker() {
+        Faker faker = new Faker();
+        adidas.name.sendKeys(faker.name().fullName());
+        adidas.country.sendKeys(faker.country().name());
+        adidas.city.sendKeys(faker.country().capital());
+        adidas.card.sendKeys(faker.finance().creditCard());
+        adidas.month.sendKeys(String.valueOf(faker.number().numberBetween(1, 12)));
+        adidas.year.sendKeys(String.valueOf(faker.number().numberBetween(2022, 2030)));
+        BrowserUtils.sleep(1);
+    }
+
+    public void confirmIDAndAmount() {
+        String confirmation = adidas.confirmation.getText();
+        String [] confirmationArr = confirmation.split("\n");
+        String orderID = confirmationArr[0];
+        int actualAmount = Integer.parseInt(confirmationArr[1].split(" ")[1]);
+
+        Assert.assertEquals(actualAmount,790);
+    }
 
 }
